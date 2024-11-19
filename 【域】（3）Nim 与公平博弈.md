@@ -163,7 +163,7 @@ $$*_{x_1}*_{x_2}\cdots *_{x_n}$$
 
 $$a\otimes b=\operatorname{mex}\{i\otimes b\oplus a\otimes j\oplus i\otimes j|i\in[0,a)\cup\N,j\in[0,b)\cup\N\}\quad(a,b\in\N)$$
 
-则 $*_a*_b\equiv *_{a\otimes b}$，且 $\otimes$ 与公平博弈的乘法一样，满足
+则 $*_a*_b\equiv *_{a\otimes b}$，且公平博弈的乘法可推得 $\otimes$ 满足
 
 - 封闭性：$\forall a,b\in\N,a\otimes b\in\N$
 - 交换律：$a\otimes b=b\otimes a$
@@ -172,9 +172,12 @@ $$a\otimes b=\operatorname{mex}\{i\otimes b\oplus a\otimes j\oplus i\otimes j|i\
 - 单位元：$a\otimes 1=1$
 - $a\otimes b=0$ 当且仅当 $a=0$ 或 $b=0$
 - 消去律：若 $c\not =0,a\otimes c=b\otimes c$，则 $a=b$
+- $(a\oplus b)\otimes (a\otimes b)=a\otimes a\oplus b\otimes b$
 
 由于公平博弈满足乘法在 $\equiv$ 意义下的等量代换，  
 我们一样可以将一般的有限公平博弈化简为 Nimber，进而用 Nim 积解决积博弈问题。
+
+------------------------
 
 如何计算 Nim 积？我们有
 
@@ -197,24 +200,38 @@ $$
 a\otimes b=(a_0\oplus a_1\otimes 2^{2^{n-1}})\otimes(b_0\oplus b_1\otimes 2^{2^{n-1}})\\
 =a_0\otimes b_0\oplus(a_0\otimes b_1\oplus a_1\otimes b_0)\otimes 2^{2^{n-1}}\oplus a_1\otimes b_1\otimes (3\times 2^{2^{n-1}-1})\\
 =a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{m-1}-1}\oplus(a_0\otimes b_1\oplus a_1\otimes b_0\oplus a_1\otimes b_1)\otimes 2^{2^{n-1}}\\
-=a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{n-1}-1}\oplus((a_0\otimes b_1\oplus a_1\otimes b_0\oplus a_1\otimes b_1)\times 2^{2^{n-1}})\\
-=a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{n-1}-1}\oplus(((a_0\oplus a_1)\otimes(b_0\oplus b_1)\oplus a_0\otimes b_0)\times 2^{2^{n-1}})
+=(a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{n-1}-1})\oplus((a_0\otimes b_1\oplus a_1\otimes b_0\oplus a_1\otimes b_1)\times 2^{2^{n-1}})\quad(1)\\
+=(a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{n-1}-1})\oplus(((a_0\oplus a_1)\otimes(b_0\oplus b_1)\oplus a_0\otimes b_0)\times 2^{2^{n-1}})\quad(2)
 $$
 
 于是欲计算 $a\otimes b$，只需要计算
 
 $$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\oplus b_1)$$
 
-即可，复杂度为 $\Theta(2^{2n})$。
+即可。
 
-> 性质的证明*：我们同时对以上所有性质进行归纳。$n=0$ 时，可求得
+特别地，若 $b=2^{2^{n}-1}$，则 $b_0=0,b_1=2^{2^{n-1}-1}$，于是
+
+$$a\otimes 2^{2^n-1}=a_1\otimes 2^{2^{n-1}-1}\otimes 2^{2^{n-1}-1}\oplus(((a_0\oplus a_1)\otimes 2^{2^{n-1}-1})\times 2^{2^{n-1}})$$
+
+因此计算 $a\otimes 2^{2^n-1}$ 只需要计算 $a_1\otimes 2^{2^{n-1}-1}\otimes 2^{2^{n-1}-1}$ 和 $(a_0\oplus a_1)\otimes 2^{2^{n-1}-1}$ 即可。  
+递归计算 $a\otimes 2^{2^n-1}$ 的时间复杂度为
+
+$$T(n)=\Theta(2^n)+3T(n-1)=\Theta(3^n)$$
+
+相应地，递归计算 $a\otimes b$ 的时间复杂度为
+
+$$T(n)=\Theta(3^n)+3T(n-1)=\Theta(n3^n)$$
+
+
+> 性质的证明*：我们同时对 1. 2. 3. 4. 5. 进行归纳。$n=0$ 时，可求得
 > $$0\otimes 2=0,1\otimes 2=1,2\otimes 2=3$$
 > $$\sqrt[\otimes]{0}=0,\sqrt[\otimes]{1}=1,0\otimes(0\oplus 1)=1\otimes(1\oplus 1)=0$$
 > $\qquad n=m\in\N_+$ 时，设 $n=m-1$ 时，以上命题均成立。  
 > $\qquad$ 首先证明 $n=m$ 时 1. 成立。设 $a=a_0+a_1\times 2^{2^{m-1}},b=b_0+b_1\times 2^{2^{m-1}}$  
-> $\qquad(a_0,a_1,b_0,b_1\in[0,2^{m-1})\cap\N)$，则因为 $n=m-1$ 时 2.、3. 成立，参考 Nim 积的求解算法得
+> $\qquad(a_0,a_1,b_0,b_1\in[0,2^{m-1})\cap\N)$，则因为 $n=m-1$ 时 2.、3. 成立，参考 Nim 积求解算法中 $(2)$ 式得
 > $$
-> a\otimes b=a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{m-1}-1}\oplus(((a_0\oplus a_1)\otimes(b_0\oplus b_1)\oplus a_0\otimes b_0)\times 2^{2^{m-1}})
+> a\otimes b=(a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{m-1}-1})\oplus(((a_0\oplus a_1)\otimes(b_0\oplus b_1)\oplus a_0\otimes b_0)\times 2^{2^{m-1}})
 > $$
 > $\qquad$ 因为 $n=m-1$ 时 1. 成立，故
 > $$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\oplus b_1)<2^{2^{m-1}}$$
@@ -234,7 +251,6 @@ $$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\
 > $$
 > a\otimes a=b\otimes b\\
 > a\otimes a\oplus b\otimes b=0\\
-> a\otimes a\oplus a\otimes b\oplus b\otimes a\oplus b\otimes b=0\\
 > (a\oplus b)\otimes (a\oplus b)=0\\
 > a\oplus b=0\\
 > a=b
@@ -243,10 +259,10 @@ $$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\
 > 
 > -------
 > $\qquad$ 5. 的证明与 1. 类似。对于任意的 $x\in [0,2^{2^m})\cup\N$，  
-> $\qquad$ 设 $x=x_0+x_1\times 2^{2^{m-1}}\ (x_0,x_1\in [0,2^{2^{m-1}}))$，参考 Nim 积的求解算法得  
-> $$x\otimes (x\oplus 1)=x_0\otimes(x_0\oplus 1)\oplus x_1\otimes x_1\otimes 2^{2^{m-1}-1}\oplus((x_0\otimes x_1\oplus x_1\otimes (x_0\oplus 1)\oplus x_1\otimes x_1)\times 2^{2^{m-1}})\\
-> =x_0\otimes(x_0\oplus 1)\oplus x_1\otimes x_1\otimes 2^{2^{m-1}-1}\oplus((x_0\otimes x_1\oplus x_1\otimes x_0\oplus x_1\oplus x_1\otimes x_1)\times 2^{2^{m-1}})\\
-> =x_0\otimes(x_0\oplus 1)\oplus x_1\otimes x_1\otimes 2^{2^{m-1}-1}\oplus((x_1\otimes(x_1\oplus 1))\times 2^{2^{m-1}})
+> $\qquad$ 设 $x=x_0+x_1\times 2^{2^{m-1}}\ (x_0,x_1\in [0,2^{2^{m-1}}))$，参考 Nim 积的求解算法中 $(1)$ 式得  
+> $$x\otimes (x\oplus 1)=(x_0\otimes(x_0\oplus 1)\oplus x_1\otimes x_1\otimes 2^{2^{m-1}-1})\oplus((x_0\otimes x_1\oplus x_1\otimes (x_0\oplus 1)\oplus x_1\otimes x_1)\times 2^{2^{m-1}})\\
+> =(x_0\otimes(x_0\oplus 1)\oplus x_1\otimes x_1\otimes 2^{2^{m-1}-1})\oplus((x_0\otimes x_1\oplus x_1\otimes x_0\oplus x_1\oplus x_1\otimes x_1)\times 2^{2^{m-1}})\\
+> =(x_0\otimes(x_0\oplus 1)\oplus x_1\otimes x_1\otimes 2^{2^{m-1}-1})\oplus((x_1\otimes(x_1\oplus 1))\times 2^{2^{m-1}})
 > $$
 > $\qquad$ 因为 $n=m-1$ 时 1.,5. 均成立，故
 > $$
@@ -275,7 +291,6 @@ $$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\
 > a\otimes(a\oplus 1)=b\otimes (b\oplus 1)\\
 > a\otimes a\oplus a=b\otimes b\oplus b\\
 > a\otimes a\oplus b\otimes b=a\oplus b\\
-> a\otimes a\oplus a\otimes b\oplus b\otimes a\oplus b\otimes b=a\oplus b\\
 > (a\oplus b)\otimes (a\oplus b)=a\oplus b\\
 > (a\oplus b)\otimes (a\oplus b\oplus 1)=0\\
 > a\oplus b=0\texttt{ 或 } a\oplus b\oplus 1=0\\
@@ -285,6 +300,8 @@ $$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\
 > $$\{(i\oplus j)\otimes 2^{2^m}\oplus i\otimes j|i,j\in[0,2^{2^m})\cap\N,i\oplus j=1\}=[2^{2^{m}},3\times 2^{2^m-1})\cap\N$$
 > $\qquad$ 综上，根据 $\operatorname{mex}$ 的定义，即可得到
 > $$2^{2^m}\otimes 2^{2^m}=\operatorname{mex}([0,2^{2^m})\cup[2^{2^{m}},3\times 2^{2^m-1})\cup[2^{2^m+1},+\infty))\cap\N=3\times 2^{2^m-1}$$
+
+-----------------------
 
 在满足消去律的同时，性质 4. 还表明 Nim 积意义下的平方根存在，这暗示着 Nim 积存在逆元。
 
@@ -303,10 +320,60 @@ $$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\
 > $$a^{\otimes(2^k-2)}\otimes a=a^{\otimes(2^k-1)}=1$$
 > $\qquad\quad$ 即 $a^{\otimes(2^k-2)}$ 就是我们要找的逆元 $a^{\otimes-1}$。
 
-证明了逆元的存在，我们便彻底解析了 $\otimes$ 的结构：
-
+证明了逆元的存在，我们便解析了 $\otimes$ 的结构：  
 $(\N,\oplus,\otimes)$ 构成一个域，且 $[0,2^{2^n})\cap\N\ (n\in\N)$ 均是它的子域。
 
-并且，与欧拉定理类似，可通过拉格朗日定理，用快速幂 $\Theta(2^{3n})$ 求解 Nim 积的逆元和平方根
+并且，与欧拉定理类似，可通过拉格朗日定理，用快速幂 $\Theta(n6^{n})$ 求解 Nim 积的逆元和平方根
 
 $$0<a<2^{2^n}\Rightarrow a^{\otimes(2^{2^n}-1)}=1\Rightarrow a^{\otimes-1}=a^{\otimes(2^{2^n}-2)},\sqrt[\otimes]{a}=a^{\otimes 2^{2^n-1}}$$
+
+当然，也有更快的算法。对于平方和平方根，若已知 $a$，欲求 $b=a^{\otimes 2}$，则
+
+$$
+a^{\otimes 2}=(a_0\oplus a_1\otimes 2^{2^{n-1}})^{\otimes2}=a_0^{\otimes 2}\oplus (a_1\otimes 2^{2^{n-1}})^{\otimes 2}\\
+=a_0^{\otimes 2}\oplus a_1^{\otimes 2}\otimes(3\times 2^{2^{n-1}-1})=a_0^{\otimes 2}\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}-1}\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}}\\
+=(a_0^{\otimes 2}\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}-1})\oplus(a_1^{\otimes 2}\times 2^{2^{n-1}})
+$$
+
+于是
+
+$$
+\begin{cases}
+	b_0=a_0^{\otimes 2}\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}-1}\\
+	b_1=a_1^{\otimes 2}
+\end{cases}\quad(3)
+$$
+
+递归求解 $a_0^{\otimes 2},a_1^{\otimes 2},a_1^{\otimes 2}\otimes 2^{2^{n-1}-1}$，即可求得 $b=a^{\otimes 2}$。时间复杂度为
+
+$$T(n)=\Theta(3^n)+\Theta(n-1)=\Theta(3^n)$$
+
+若已知 $b$，欲求 $a=\sqrt[\otimes]{b}$，由 $(3)$ 亦可得
+
+
+$$
+\begin{cases}
+	b_0\oplus b_1\otimes 2^{2^{n-1}-1}=a_0^{\otimes 2}\\
+	b_1=a_1^{\otimes 2}
+\end{cases}
+$$
+
+递归求解 $\sqrt[\otimes]{b_0\oplus b_1\otimes 2^{2^{n-1}-1}},\sqrt[\otimes]{b_1}$，即可求得 $a=\sqrt[\otimes]{b}$，时间复杂度为
+
+$$T(n)=\Theta(3^n)+2T(n-1)=\Theta(3^n)$$
+
+最后，对于 Nim 积的逆元，注意到
+
+$$
+(a_0\oplus a_1\otimes 2^{2^{n-1}})\otimes (a_0\oplus a_1\oplus a_1\otimes 2^{2^{n-1}})=(a_0\oplus a_1\otimes 2^{2^{n-1}})^{\otimes 2}\oplus a_1\otimes(a_0\oplus a_1\otimes 2^{2^{n-1}})\\
+=(a_0^{\otimes 2}\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}-1}\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}})\oplus a_1\otimes a_0\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}}\\
+=a_0\otimes(a_0\oplus a_1)\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}-1}<2^{2^{n-1}}
+$$
+
+于是
+
+$$a^{\otimes-1}=(a_0\oplus a_1\otimes 2^{2^{n-1}})^{\otimes-1}=(a_0\oplus a_1\oplus a_1\otimes 2^{2^{n-1}-1})\otimes(a_0\otimes(a_0\oplus a_1)\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}-1})^{\otimes-1}$$
+
+递归计算出 $(a_0\otimes(a_0\oplus a_1)\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}-1})^{\otimes-1}$ 后，再作一次 Nim 积即可求出 $a^{\otimes-1}$。时间复杂度为
+
+$$T(n)=\Theta(n3^n)+T(n-1)=\Theta(n3^n)$$
