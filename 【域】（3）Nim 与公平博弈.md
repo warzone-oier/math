@@ -207,7 +207,7 @@ $$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\
 
 即可，复杂度为 $\Theta(2^{2n})$。
 
-> 性质的证明*：我们同时对 1.，2.，3.，4.，5. 进行归纳。$n=0$ 时，可求得
+> 性质的证明*：我们同时对以上所有性质进行归纳。$n=0$ 时，可求得
 > $$0\otimes 2=0,1\otimes 2=1,2\otimes 2=3$$
 > $$\sqrt[\otimes]{0}=0,\sqrt[\otimes]{1}=1,0\otimes(0\oplus 1)=1\otimes(1\oplus 1)=0$$
 > $\qquad n=m\in\N_+$ 时，设 $n=m-1$ 时，以上命题均成立。  
@@ -286,3 +286,27 @@ $$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\
 > $\qquad$ 综上，根据 $\operatorname{mex}$ 的定义，即可得到
 > $$2^{2^m}\otimes 2^{2^m}=\operatorname{mex}([0,2^{2^m})\cup[2^{2^{m}},3\times 2^{2^m-1})\cup[2^{2^m+1},+\infty))\cap\N=3\times 2^{2^m-1}$$
 
+在满足消去律的同时，性质 4. 还表明 Nim 积意义下的平方根存在，这暗示着 Nim 积存在逆元。
+
+> 求证：对于任意的 $a\in[1,2^{2^n})\cap\N\ (n\in\N)$，存在 $a^{\otimes -1}\in[1,2^{2^n}),a^{\otimes -1}\otimes a=1$  
+> 证明：我们记 Nim 积意义下的乘方为 $a^{\otimes n}$，即
+> $$a^{\otimes 0}=1,a^{\otimes n}=a^{\otimes (n-1)}\otimes a\quad(n\in\N_+)$$
+> $\qquad\quad$ 由性质 4. 的证明，$F(x)=x\otimes x$ 为 $[1,2^{2^n})\cap\N$ 上的置换，因此 
+> $$\exist k\in\N_+,F^k(a)=a$$
+> $\qquad\quad$ 即 $a^{\otimes 2^k}=a$。于是
+> $$
+> a^{\otimes(2^k-1)}\otimes a=a\\
+> (a^{\otimes(2^k-1)}\oplus 1)\otimes a=0
+> $$
+> $\qquad\quad$ 故由 Nim 积的消去律得 $a^{\otimes(2^k-1)}\oplus 1=0$，即 $a^{\otimes(2^k-1)}=1$。  
+> $\qquad\quad$ 因为 $k\in\N_+$，故 $2^k-2\ge 0$，于是
+> $$a^{\otimes(2^k-2)}\otimes a=a^{\otimes(2^k-1)}=1$$
+> $\qquad\quad$ 即 $a^{\otimes(2^k-2)}$ 就是我们要找的逆元 $a^{\otimes-1}$。
+
+证明了逆元的存在，我们便彻底解析了 $\otimes$ 的结构：
+
+$(\N,\oplus,\otimes)$ 构成一个域，且 $[0,2^{2^n})\cap\N\ (n\in\N)$ 均是它的子域。
+
+并且，与欧拉定理类似，可通过拉格朗日定理，用快速幂 $\Theta(2^{3n})$ 求解 Nim 积的逆元和平方根
+
+$$0<a<2^{2^n}\Rightarrow a^{\otimes(2^{2^n}-1)}=1\Rightarrow a^{\otimes-1}=a^{\otimes(2^{2^n}-2)},\sqrt[\otimes]{a}=a^{\otimes 2^{2^n-1}}$$
