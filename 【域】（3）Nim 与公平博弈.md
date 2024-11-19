@@ -16,7 +16,7 @@ $$g=-g$$
 $$g*=\{S*+g0+S0|S*+g0+S0\}=\{S|S\}=g$$
 
 > 求证：对于公平博弈 $g,h$，$gh||0$ 当且仅当 $g||0$ 且 $h||0$。  
-> 证明：考虑归纳，设该命题为 $P(g,h)$，$g=\{S_g|S_g\},h=\{S_h|S_h\}$，并定义
+> 证明*：考虑归纳，设该命题为 $P(g,h)$，$g=\{S_g|S_g\},h=\{S_h|S_h\}$，并定义
 > $$H(g)=\{g\}\cup\bigcup_{s_g\in S_g}H(s_g)$$
 > $\qquad\quad$ 假设对于任意的 $(g',h')\in H(g)\cup H(h)$ 且 $(g',h')\not=(g,h)$，$P(g',h')$ 成立，则  
 > $\qquad\quad g||0$（即 $g$ 先手必胜）当且仅当存在 $s_g\in S_g$ 满足 $s_g\equiv 0$（即 $s_g$ 后手必胜），  
@@ -37,7 +37,16 @@ $$g*=\{S*+g0+S0|S*+g0+S0\}=\{S|S\}=g$$
 
 由以上定理，即可证明公平博弈满足乘法在 $\equiv$ 意义下的等量代换：
 
-$$g_1\equiv g_2\Rightarrow g_1-g_2\equiv 0\Rightarrow (g_1-g_2)h\equiv 0$$
+$$g_1\equiv g_2\Leftrightarrow g_1-g_2\equiv 0\Rightarrow (g_1-g_2)h\equiv 0\Leftrightarrow g_1h\equiv g_2h$$
+
+且可证明，公平博弈满足乘法在 $\equiv$ 意义下的消去律：
+
+$$
+\begin{rcases}
+	g_1h\equiv g_2h\Leftrightarrow(g_1-g_2)h\equiv 0\\
+	h\not =0
+\end{rcases}\Rightarrow g_1-g_2\equiv 0\Leftrightarrow g_1\equiv g_2
+$$
 
 ### Nim 游戏
 
@@ -134,21 +143,6 @@ Nim 游戏规则可以抽象为如下形式：
 
 $$*_a*_b=\{T|T\},T=\{*_i*_b+*_j*_a+*_i*_j|i\in[0,a)\cup\N,j\in[0,b)\cup\N\}$$
 
-由于二维 Nim 博弈依然是公平博弈，其 SG 函数值必定存在，故定义 **Nim 积**
-
-$$a\otimes b=\mathop{\operatorname{mex}}\{b\otimes i\oplus a\otimes j\oplus i\otimes j|i\in[0,a)\cup\N,j\in[0,b)\cup\N\}\quad(a,b\in\N)$$
-
-则 $*_a*_b\equiv *_{a\otimes b}$，且 $\otimes$ 与博弈的乘法一样，满足
-
-- 封闭性：$\forall a,b\in\N,a\otimes b\in\N$
-- 交换律：$a\otimes b=b\otimes a$
-- 结合律：$(a\otimes b)\otimes c=a\otimes(b\otimes c)$
-- 零元：$a\otimes 0=0$
-- 单位元：$a\otimes 1=1$
-
-由于公平博弈满足乘法在 $\equiv$ 意义下的等量代换，  
-我们一样可以将一般的公平博弈化简为 Nimber，进而用 Nim 积解决积博弈问题。
-
 更进一步地，定义 $m$ 维 Nim 游戏的规则如下：
 
 > 有由 $n$ 个有序对 $(x_1,x_2,\cdots,x_m)\ (x_1,x_2,\cdots,x_m\in\N)$ 所组成的可重集 $S$。  
@@ -159,6 +153,136 @@ $$a\otimes b=\mathop{\operatorname{mex}}\{b\otimes i\oplus a\otimes j\oplus i\ot
 > 
 > 所在回合不能操作的一方失败。
 
-那么相应的，对于 $S$ 中只含一个有序对 $(x_1,x_2,\cdots,x_m)$ 的 $m$ 维 Nim 游戏，其形式为
+那么相应地，对于 $S$ 中只含一个有序对 $(x_1,x_2,\cdots,x_m)$ 的 $m$ 维 Nim 游戏，其形式为
 
 $$*_{x_1}*_{x_2}\cdots *_{x_n}$$
+
+------------------------------------
+
+由于高维 Nim 博弈依然是公平博弈，其 SG 函数值必定存在，故定义 **Nim 积**
+
+$$a\otimes b=\operatorname{mex}\{i\otimes b\oplus a\otimes j\oplus i\otimes j|i\in[0,a)\cup\N,j\in[0,b)\cup\N\}\quad(a,b\in\N)$$
+
+则 $*_a*_b\equiv *_{a\otimes b}$，且 $\otimes$ 与公平博弈的乘法一样，满足
+
+- 封闭性：$\forall a,b\in\N,a\otimes b\in\N$
+- 交换律：$a\otimes b=b\otimes a$
+- 结合律：$(a\otimes b)\otimes c=a\otimes(b\otimes c)$
+- 零元：$a\otimes 0=0$
+- 单位元：$a\otimes 1=1$
+- $a\otimes b=0$ 当且仅当 $a=0$ 或 $b=0$
+- 消去律：若 $c\not =0,a\otimes c=b\otimes c$，则 $a=b$
+
+由于公平博弈满足乘法在 $\equiv$ 意义下的等量代换，  
+我们一样可以将一般的有限公平博弈化简为 Nimber，进而用 Nim 积解决积博弈问题。
+
+如何计算 Nim 积？我们有
+
+1. 若 $a,b<2^{2^n}\ (n\in\N)$ 则 $a\otimes b<2^{2^n}$
+2. 若 $a<2^{2^n}\ (n\in\N)$，则 $a\otimes 2^{2^n}=a\times 2^{2^n}$
+3. $\forall n\in\N,2^{2^n}\otimes 2^{2^n}=3\times 2^{2^n-1}$
+4. **平方根**：若 $x<2^{2^n}$，则存在唯一的 $a<2^{2^n},a\otimes a=x$（此时记 $a=\sqrt[\otimes]{x}$）
+5. 若 $a<2^{2^n}$，则 $a\otimes(a\oplus 1)<2^{2^n-1}$
+
+由性质 1.，2.，3.，即可得到求解 Nim 积的算法。对于 $a,b<2^{2^n}$，设
+
+$$
+a=a_0+a_1\times 2^{2^{n-1}}\ (a_0,a_1\in[0,2^{2^{n-1}})\cap\N)\\
+b=b_0+b_1\times 2^{2^{n-1}}\ (b_0,b_1\in[0,2^{2^{n-1}})\cap\N)
+$$
+
+则
+
+$$
+a\otimes b=(a_0\oplus a_1\otimes 2^{2^{n-1}})\otimes(b_0\oplus b_1\otimes 2^{2^{n-1}})\\
+=a_0\otimes b_0\oplus(a_0\otimes b_1\oplus a_1\otimes b_0)\otimes 2^{2^{n-1}}\oplus a_1\otimes b_1\otimes (3\times 2^{2^{n-1}-1})\\
+=a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{m-1}-1}\oplus(a_0\otimes b_1\oplus a_1\otimes b_0\oplus a_1\otimes b_1)\otimes 2^{2^{n-1}}\\
+=a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{n-1}-1}\oplus((a_0\otimes b_1\oplus a_1\otimes b_0\oplus a_1\otimes b_1)\times 2^{2^{n-1}})\\
+=a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{n-1}-1}\oplus(((a_0\oplus a_1)\otimes(b_0\oplus b_1)\oplus a_0\otimes b_0)\times 2^{2^{n-1}})
+$$
+
+于是欲计算 $a\otimes b$，只需要计算
+
+$$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\oplus b_1)$$
+
+即可，复杂度为 $\Theta(2^{2n})$。
+
+> 性质的证明*：我们同时对 1.，2.，3.，4.，5. 进行归纳。$n=0$ 时，可求得
+> $$0\otimes 2=0,1\otimes 2=1,2\otimes 2=3$$
+> $$\sqrt[\otimes]{0}=0,\sqrt[\otimes]{1}=1,0\otimes(0\oplus 1)=1\otimes(1\oplus 1)=0$$
+> $\qquad n=m\in\N_+$ 时，设 $n=m-1$ 时，以上命题均成立。  
+> $\qquad$ 首先证明 $n=m$ 时 1. 成立。设 $a=a_0+a_1\times 2^{2^{m-1}},b=b_0+b_1\times 2^{2^{m-1}}$  
+> $\qquad(a_0,a_1,b_0,b_1\in[0,2^{m-1})\cap\N)$，则因为 $n=m-1$ 时 2.、3. 成立，参考 Nim 积的求解算法得
+> $$
+> a\otimes b=a_0\otimes b_0\oplus a_1\otimes b_1\otimes 2^{2^{m-1}-1}\oplus(((a_0\oplus a_1)\otimes(b_0\oplus b_1)\oplus a_0\otimes b_0)\times 2^{2^{m-1}})
+> $$
+> $\qquad$ 因为 $n=m-1$ 时 1. 成立，故
+> $$a_0\otimes b_0,a_1\otimes b_1\otimes 2^{2^{n-1}-1},(a_0\oplus a_1)\otimes(b_0\oplus b_1)<2^{2^{m-1}}$$
+> $\qquad$ 即可证明 $a\otimes b<2^{2^m}$。
+> 
+> -------
+> $\qquad$ 有了 1.，即可归纳证明 2. 了。对于 $a<2^{2^m}$，设 $\forall i\in[0,a)\cap\N,i\otimes 2^{2^m}=i\times 2^{2^m}$，则
+> $$
+> a\otimes 2^{2^m}=\operatorname{mex}\{i\otimes 2^{2^m}\oplus a\otimes j\oplus i\otimes j|i\in[0,a)\cap\N,j\in[0,2^{2^{m}})\cap\N\}\\
+> =\operatorname{mex}\{(i\times 2^{2^m})\oplus (a\oplus i)\otimes j|i\in[0,a)\cap\N,j\in[0,2^{2^{m}})\cap\N\}
+> $$
+> $\qquad$ 因为 $i<a<2^{2^m}$，故 $0<a\oplus i<2^{2^m}$。又因为 $n=m$ 时 1. 成立，故 $(a\oplus i)\otimes j<2^{2^m}$，   
+> $\qquad$ 再根据 Nim 积的消去律，即可得到 $((a\oplus i)\otimes)$ 为 $[0,2^{2^m})\cap\N$ 上的置换，于是
+> $$a\otimes 2^{2^m}=\operatorname{mex}\{(i\times 2^{2^m})\oplus j|i\in[0,a)\cap\N,j\in[0,2^{2^{m}})\cap\N\}=a\times 2^{2^m}$$
+> -----  
+> $\qquad$ 接下来证明 4. 成立。设 $F(x)=x\otimes x$，则若 $F(a)=F(b)$，
+> $$
+> a\otimes a=b\otimes b\\
+> a\otimes a\oplus b\otimes b=0\\
+> a\otimes a\oplus a\otimes b\oplus b\otimes a\oplus b\otimes b=0\\
+> (a\oplus b)\otimes (a\oplus b)=0\\
+> a\oplus b=0\\
+> a=b
+> $$
+> $\qquad$ 于是 $F$ 是单射。又由 $n=m$ 时 1. 成立，即可得到 $F$ 是 $[0,2^{2^m})$ 上的置换，由此得 4. 成立。  
+> 
+> -------
+> $\qquad$ 5. 的证明与 1. 类似。对于任意的 $x\in [0,2^{2^m})\cup\N$，  
+> $\qquad$ 设 $x=x_0+x_1\times 2^{2^{m-1}}\ (x_0,x_1\in [0,2^{2^{m-1}}))$，参考 Nim 积的求解算法得  
+> $$x\otimes (x\oplus 1)=x_0\otimes(x_0\oplus 1)\oplus x_1\otimes x_1\otimes 2^{2^{m-1}-1}\oplus((x_0\otimes x_1\oplus x_1\otimes (x_0\oplus 1)\oplus x_1\otimes x_1)\times 2^{2^{m-1}})\\
+> =x_0\otimes(x_0\oplus 1)\oplus x_1\otimes x_1\otimes 2^{2^{m-1}-1}\oplus((x_0\otimes x_1\oplus x_1\otimes x_0\oplus x_1\oplus x_1\otimes x_1)\times 2^{2^{m-1}})\\
+> =x_0\otimes(x_0\oplus 1)\oplus x_1\otimes x_1\otimes 2^{2^{m-1}-1}\oplus((x_1\otimes(x_1\oplus 1))\times 2^{2^{m-1}})
+> $$
+> $\qquad$ 因为 $n=m-1$ 时 1.,5. 均成立，故
+> $$
+> x_0\otimes(x_0\oplus 1),x_1\otimes x_1\otimes 2^{2^{m-1}-1}<2^{2^{m-1}}\\
+> x_1\otimes(x_1\oplus 1)<2^{2^{m-1}-1}
+> $$
+> $\qquad$ 即可证明 $x\otimes (x\oplus 1)<2^{2^{m}-1}$。
+>
+> -----
+>
+> $\qquad$ 最后证明 3. 成立。由 $n=m$ 时 1. 2. 成立得
+> $$
+> 2^{2^m}\otimes 2^{2^m}=\operatorname{mex}\{i\otimes 2^{2^m}\oplus 2^{2^m}\otimes j\oplus i\otimes j|i,j\in[0,2^{2^m})\cap\N\}\\
+> =\operatorname{mex}\{(i\oplus j)\otimes 2^{2^m}\oplus i\otimes j|i,j\in[0,2^{2^m})\cap\N\}\\
+\forall i,j\in[0,2^{2^m})\cap\N,i\otimes j\in[0,2^{2^m})\cap\N
+> $$
+> $\qquad$ 若 $i\oplus j\ge 2$，则显然 $(i\oplus j)\otimes 2^{2^m}\oplus i\otimes j\ge 2^{2^{m}+1}$。  
+> $\qquad$ 若 $i\oplus j=0$，即 $i=j$，则 $(i\oplus j)\otimes 2^{2^m}\oplus i\otimes j=i\otimes i=F(i)$，  
+> $\qquad$ 由 4. 的证明我们已经知道了 $F$ 是 $[0,2^{2^m})\cap\N$ 上的置换，于是
+> $$\{(i\oplus j)\otimes 2^{2^m}\oplus i\otimes j|i,j\in[0,2^{2^m})\cap\N,i\oplus j=0\}=[0,2^{2^m})\cap\N$$
+> $\qquad$ 若 $i\oplus j=1$，即 $j=i\oplus 1$，则 $(i\oplus j)\otimes 2^{2^m}\oplus i\otimes j=2^{2^m}\oplus i\otimes (i\oplus 1)$，  
+> $\qquad$ 与 4. 的证明类似地，设 $G(x)=x\otimes (x\oplus 1)$，则因为 $n=m$ 时 5. 成立，
+> $$\{G(x)|x\in[0,2^{2^m})\cap\N\}\subseteq [0,2^{2^{m}-1})\cap\N$$
+> $\qquad$ 同时，若 $G(a)=G(b)$，则
+> $$
+> a\otimes(a\oplus 1)=b\otimes (b\oplus 1)\\
+> a\otimes a\oplus a=b\otimes b\oplus b\\
+> a\otimes a\oplus b\otimes b=a\oplus b\\
+> a\otimes a\oplus a\otimes b\oplus b\otimes a\oplus b\otimes b=a\oplus b\\
+> (a\oplus b)\otimes (a\oplus b)=a\oplus b\\
+> (a\oplus b)\otimes (a\oplus b\oplus 1)=0\\
+> a\oplus b=0\texttt{ 或 } a\oplus b\oplus 1=0\\
+> a=b\texttt{ 或 } a=b\oplus 1
+> $$
+> $\qquad$ 于是 $\{G(x)|x\in[0,2^{2^m})\cap\N\}=[0,2^{2^{m}-1})\cap\N$，故
+> $$\{(i\oplus j)\otimes 2^{2^m}\oplus i\otimes j|i,j\in[0,2^{2^m})\cap\N,i\oplus j=1\}=[2^{2^{m}},3\times 2^{2^m-1})\cap\N$$
+> $\qquad$ 综上，根据 $\operatorname{mex}$ 的定义，即可得到
+> $$2^{2^m}\otimes 2^{2^m}=\operatorname{mex}([0,2^{2^m})\cup[2^{2^{m}},3\times 2^{2^m-1})\cup[2^{2^m+1},+\infty))\cap\N=3\times 2^{2^m-1}$$
+
