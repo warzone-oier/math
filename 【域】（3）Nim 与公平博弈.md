@@ -18,7 +18,7 @@ $$g*=\{S*+g0+S0|S*+g0+S0\}=\{S|S\}=g$$
 > 求证：对于公平博弈 $g,h$，$gh||0$ 当且仅当 $g||0$ 且 $h||0$。  
 > 证明*：考虑归纳，设该命题为 $P(g,h)$，$g=\{S_g|S_g\},h=\{S_h|S_h\}$，并定义
 > $$H(g)=\{g\}\cup\bigcup_{s_g\in S_g}H(s_g)$$
-> $\qquad\quad$ 假设对于任意的 $(g',h')\in H(g)\cup H(h)$ 且 $(g',h')\not=(g,h)$，$P(g',h')$ 成立，则  
+> $\qquad\quad$ 假设对于任意的 $(g',h')\in H(g)\times H(h)$ 且 $(g',h')\not=(g,h)$，$P(g',h')$ 成立，则  
 > $\qquad\quad g||0$（即 $g$ 先手必胜）当且仅当存在 $s_g\in S_g$ 满足 $s_g\equiv 0$（即 $s_g$ 后手必胜），  
 > $\qquad\quad h||0$（即 $h$ 先手必胜）当且仅当存在 $s_h\in S_h$ 满足 $s_h\equiv 0$（即 $s_h$ 后手必胜）。  
 > $\qquad\quad$ 于是若 $g||0$ 且 $h||0$，则有
@@ -217,11 +217,11 @@ $$a\otimes 2^{2^n-1}=a_1\otimes 2^{2^{n-1}-1}\otimes 2^{2^{n-1}-1}\oplus(((a_0\o
 因此计算 $a\otimes 2^{2^n-1}$ 只需要计算 $a_1\otimes 2^{2^{n-1}-1}\otimes 2^{2^{n-1}-1}$ 和 $(a_0\oplus a_1)\otimes 2^{2^{n-1}-1}$ 即可。  
 递归计算 $a\otimes 2^{2^n-1}$ 的时间复杂度为
 
-$$T(n)=\Theta(2^n)+3T(n-1)=\Theta(3^n)$$
+$$T(n)=3T(n-1)+\Theta(2^n)=\Theta(3^n)$$
 
 相应地，递归计算 $a\otimes b$ 的时间复杂度为
 
-$$T(n)=\Theta(3^n)+3T(n-1)=\Theta(n3^n)$$
+$$T(n)=3T(n-1)+\Theta(3^n)=\Theta(n3^n)$$
 
 
 > 性质的证明*：我们同时对 1. 2. 3. 4. 5. 进行归纳。$n=0$ 时，可求得
@@ -327,7 +327,9 @@ $(\N,\oplus,\otimes)$ 构成一个域，且 $[0,2^{2^n})\cap\N\ (n\in\N)$ 均是
 
 $$0<a<2^{2^n}\Rightarrow a^{\otimes(2^{2^n}-1)}=1\Rightarrow a^{\otimes-1}=a^{\otimes(2^{2^n}-2)},\sqrt[\otimes]{a}=a^{\otimes 2^{2^n-1}}$$
 
-当然，也有更快的算法。对于平方和平方根，若已知 $a$，欲求 $b=a^{\otimes 2}$，则
+当然，也有更快的算法。
+
+对于平方和平方根，若已知 $a$，欲求 $b=a^{\otimes 2}$，则
 
 $$
 a^{\otimes 2}=(a_0\oplus a_1\otimes 2^{2^{n-1}})^{\otimes2}=a_0^{\otimes 2}\oplus (a_1\otimes 2^{2^{n-1}})^{\otimes 2}\\
@@ -346,7 +348,7 @@ $$
 
 递归求解 $a_0^{\otimes 2},a_1^{\otimes 2},a_1^{\otimes 2}\otimes 2^{2^{n-1}-1}$，即可求得 $b=a^{\otimes 2}$。时间复杂度为
 
-$$T(n)=\Theta(3^n)+\Theta(n-1)=\Theta(3^n)$$
+$$T(n)=2T(n-1)+\Theta(3^n)=\Theta(3^n)$$
 
 若已知 $b$，欲求 $a=\sqrt[\otimes]{b}$，由 $(3)$ 亦可得
 
@@ -358,9 +360,7 @@ $$
 \end{cases}
 $$
 
-递归求解 $\sqrt[\otimes]{b_0\oplus b_1\otimes 2^{2^{n-1}-1}},\sqrt[\otimes]{b_1}$，即可求得 $a=\sqrt[\otimes]{b}$，时间复杂度为
-
-$$T(n)=\Theta(3^n)+2T(n-1)=\Theta(3^n)$$
+递归求解 $\sqrt[\otimes]{b_0\oplus b_1\otimes 2^{2^{n-1}-1}},\sqrt[\otimes]{b_1}$，即可求得 $a=\sqrt[\otimes]{b}$，时间复杂度同样为 $\Theta(3^n)$。
 
 最后，对于 Nim 积的逆元，注意到
 
@@ -376,4 +376,4 @@ $$a^{\otimes-1}=(a_0\oplus a_1\otimes 2^{2^{n-1}})^{\otimes-1}=(a_0\oplus a_1\op
 
 递归计算出 $(a_0\otimes(a_0\oplus a_1)\oplus a_1^{\otimes 2}\otimes 2^{2^{n-1}-1})^{\otimes-1}$ 后，再作一次 Nim 积即可求出 $a^{\otimes-1}$。时间复杂度为
 
-$$T(n)=\Theta(n3^n)+T(n-1)=\Theta(n3^n)$$
+$$T(n)=T(n-1)+\Theta(n3^n)=\Theta(n3^n)$$
